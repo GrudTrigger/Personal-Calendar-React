@@ -5,14 +5,7 @@ import { useState } from "react";
 
 const DaysOfMonth = () => {
   const { daysArray, setDays } = useDaysArray();
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   return (
     <DaysOfMonthGrid>
@@ -21,14 +14,12 @@ const DaysOfMonth = () => {
           <DaysCell
             key={index}
             isWeekend={dayItem.day() === 6 || dayItem.day() === 0}
-            onMouseEnter={() => {
-              handleMouseEnter();
-            }}
-            onMouseLeave={() => {
-              handleMouseLeave();
-            }}
+            onMouseEnter={() => setHoveredIndex(index)}
+            onMouseLeave={() => setHoveredIndex(null)}
           >
-            {isHovered && <AddIcon className={"mr-8 cursor-pointer"} />}
+            {hoveredIndex === index && (
+              <AddIcon className="mr-8 cursor-pointer" />
+            )}
             <Day dayItem={dayItem}></Day>
           </DaysCell>
         );
@@ -45,8 +36,8 @@ const DaysOfMonthGrid = ({ children }) => {
 
 const DaysCell = ({ children, isWeekend, onMouseEnter, onMouseLeave }) => {
   const classCell = clsx(
-    "w-31 h-32 bg-white border rounded-xl border-gray-200 flex justify-end pr-3 pt-2",
-    { "bg-gray-200": isWeekend, "bg-white": !isWeekend },
+    "w-31 h-32 border rounded-xl border-gray-200 flex justify-end pr-3 pt-2",
+    isWeekend ? "bg-gray-200" : "bg-white",
   );
   return (
     <div
