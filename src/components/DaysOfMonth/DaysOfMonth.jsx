@@ -1,12 +1,11 @@
 import clsx from "clsx";
 import moment from "moment";
 import AddIcon from "../icons/AddIcon";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 
 const DaysOfMonth = ({ startDay }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  // const today = new Date().getDate();
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const totalDay = 42;
@@ -18,10 +17,11 @@ const DaysOfMonth = ({ startDay }) => {
       .add(index + 1, "day")
       .clone(),
   );
+  console.log(startDay);
 
   const isCurrentDay = (day) => {
-    const today = moment(); // Получаем текущую дату с помощью moment.js
-    return day.isSame(today, "day"); // Сравниваем day с сегодняшней датой
+    const today = moment();
+    return day.isSame(today, "day");
   };
 
   return (
@@ -44,7 +44,7 @@ const DaysOfMonth = ({ startDay }) => {
               />
             )}
             <Day
-              today={isToday} // Передаем текущую дату
+              today={isToday}
               dayItem={dayItem}
               isCurrentDay={isCurrentDay}
             ></Day>
