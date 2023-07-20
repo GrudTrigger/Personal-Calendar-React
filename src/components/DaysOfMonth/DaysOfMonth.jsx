@@ -1,34 +1,34 @@
 import clsx from "clsx";
-import useDaysArray from "./useDaysArray";
+import moment from "moment";
 import AddIcon from "../icons/AddIcon";
 import { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 
-const DaysOfMonth = () => {
-  const { daysArray, setDays } = useDaysArray();
+const DaysOfMonth = ({ startDay }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   // const today = new Date().getDate();
-  const [today, setToday] = useState(new Date().getDate());
-  const [isToday, setIsToday] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
 
-  useEffect(() => {
-    const interval = setInterval(
-      () => {
-        setToday(new Date().getDate());
-        setIsToday((s) => !s);
-      },
-      24 * 60 * 60 * 1000,
-    );
+  const totalDay = 42;
+  const day = startDay.clone().subtract(1, "day");
+  const daysArray = [...Array(totalDay)].map((_, index) =>
+    startDay
+      .clone()
+      .subtract(1, "day")
+      .add(index + 1, "day")
+      .clone(),
+  );
 
-    return () => {
-      clearInterval(interval); // функция очистки useEffect
-    };
-  }, [isToday]);
+  const isCurrentDay = (day) => {
+    const today = moment(); // Получаем текущую дату с помощью moment.js
+    return day.isSame(today, "day"); // Сравниваем day с сегодняшней датой
+  };
 
   return (
     <DaysOfMonthGrid>
       {daysArray.map((dayItem, index) => {
+        const isToday = dayItem.isSame(moment(), "day");
+
         return (
           <DaysCell
             key={index}
@@ -43,7 +43,11 @@ const DaysOfMonth = () => {
                 className="mr-8 cursor-pointer"
               />
             )}
-            <Day today={today} dayItem={dayItem}></Day>
+            <Day
+              today={isToday} // Передаем текущую дату
+              dayItem={dayItem}
+              isCurrentDay={isCurrentDay}
+            ></Day>
           </DaysCell>
         );
       })}
@@ -88,7 +92,7 @@ const DaysOfMonthGrid = ({ children }) => {
 const DaysCell = ({ children, isWeekend, onMouseEnter, onMouseLeave }) => {
   const classCell = clsx(
     "w-31 h-32 border rounded-xl border-gray-200 flex justify-end pr-3 pt-2",
-    isWeekend ? "bg-gray-200" : "bg-white",
+    isWeekend ? "bg-gray-300" : "bg-white",
   );
   return (
     <div
@@ -101,16 +105,22 @@ const DaysCell = ({ children, isWeekend, onMouseEnter, onMouseLeave }) => {
   );
 };
 
-const Day = ({ dayItem, today }) => {
+const Day = ({ dayItem, isCurrentDay }) => {
+  const isToday = isCurrentDay(dayItem);
+
   return (
-    <div
-      className={
-        String(today) === dayItem.format("D")
-          ? "w-7 h-7 font-title font-bold flex justify-end bg-red-500 border rounded-full"
-          : "w-7 h-7 font-title font-bold flex justify-end"
-      }
-    >
-      <div className="mx-auto">{dayItem.format("D")}</div>
+    <div>
+      <div className="mx-auto">
+        {isToday ? (
+          <div className="w-7 h-7 font-title font-bold flex items-center justify-center bg-red-500 border rounded-full">
+            {dayItem.format("D")}
+          </div>
+        ) : (
+          <div className="w-7 h-7 font-title font-bold flex justify-center items-center">
+            {dayItem.format("D")}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
