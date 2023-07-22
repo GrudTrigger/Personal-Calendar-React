@@ -17,18 +17,20 @@ const DaysOfMonth = ({ startDay }) => {
       .add(index + 1, "day")
       .clone(),
   );
-  console.log(startDay);
 
   const isCurrentDay = (day) => {
     const today = moment();
     return day.isSame(today, "day");
   };
 
+  const numberDay = startDay.month() + 1;
+  console.log(numberDay);
+
   return (
     <DaysOfMonthGrid>
       {daysArray.map((dayItem, index) => {
         const isToday = dayItem.isSame(moment(), "day");
-
+        console.log(dayItem.month());
         return (
           <DaysCell
             key={index}
@@ -47,6 +49,7 @@ const DaysOfMonth = ({ startDay }) => {
               today={isToday}
               dayItem={dayItem}
               isCurrentDay={isCurrentDay}
+              numberDay={numberDay}
             ></Day>
           </DaysCell>
         );
@@ -105,9 +108,12 @@ const DaysCell = ({ children, isWeekend, onMouseEnter, onMouseLeave }) => {
   );
 };
 
-const Day = ({ dayItem, isCurrentDay }) => {
+const Day = ({ dayItem, isCurrentDay, numberDay }) => {
   const isToday = isCurrentDay(dayItem);
-
+  const classDay = clsx(
+    "w-7 h-7 font-title font-bold  flex justify-center items-center",
+    numberDay === dayItem.month() ? "opacity-100" : "opacity-30",
+  );
   return (
     <div>
       <div className="mx-auto">
@@ -116,9 +122,7 @@ const Day = ({ dayItem, isCurrentDay }) => {
             {dayItem.format("D")}
           </div>
         ) : (
-          <div className="w-7 h-7 font-title font-bold flex justify-center items-center">
-            {dayItem.format("D")}
-          </div>
+          <div className={classDay}>{dayItem.format("D")}</div>
         )}
       </div>
     </div>
