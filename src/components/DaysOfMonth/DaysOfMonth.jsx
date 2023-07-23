@@ -4,7 +4,7 @@ import AddIcon from "../icons/AddIcon";
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 
-const DaysOfMonth = ({ startDay }) => {
+const DaysOfMonth = ({ startDay, selectedMonth, events }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
 
@@ -23,14 +23,13 @@ const DaysOfMonth = ({ startDay }) => {
     return day.isSame(today, "day");
   };
 
-  const numberDay = startDay.month() + 1;
-  console.log(numberDay);
+  const numberDay = selectedMonth.month();
 
   return (
     <DaysOfMonthGrid>
       {daysArray.map((dayItem, index) => {
         const isToday = dayItem.isSame(moment(), "day");
-        console.log(dayItem.month());
+
         return (
           <DaysCell
             key={index}
@@ -38,11 +37,11 @@ const DaysOfMonth = ({ startDay }) => {
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
           >
-            {hoveredIndex === index && (
+            {hoveredIndex === index && numberDay === dayItem.month() && (
               <AddIcon
                 setIsOpenModal={setIsOpenModal}
                 onClick={() => setIsOpenModal(true)}
-                className="mr-8 cursor-pointer"
+                className="mr-20 cursor-pointer"
               />
             )}
             <Day
@@ -94,21 +93,23 @@ const DaysOfMonthGrid = ({ children }) => {
 
 const DaysCell = ({ children, isWeekend, onMouseEnter, onMouseLeave }) => {
   const classCell = clsx(
-    "w-31 h-32 border rounded-xl border-gray-200 flex justify-end pr-3 pt-2",
+    "w-31 h-32 border rounded-xl border-gray-200 pr-3 pl-1 pt-2",
     isWeekend ? "bg-gray-300" : "bg-white",
   );
   return (
-    <div
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      className={classCell}
-    >
-      {children}
+    <div className={classCell}>
+      <div
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        className="h-7 flex justify-end"
+      >
+        {children}
+      </div>
     </div>
   );
 };
 
-const Day = ({ dayItem, isCurrentDay, numberDay }) => {
+const Day = ({ dayItem, isCurrentDay, numberDay, children }) => {
   const isToday = isCurrentDay(dayItem);
   const classDay = clsx(
     "w-7 h-7 font-title font-bold  flex justify-center items-center",
@@ -116,15 +117,42 @@ const Day = ({ dayItem, isCurrentDay, numberDay }) => {
   );
   return (
     <div>
-      <div className="mx-auto">
-        {isToday ? (
-          <div className="w-7 h-7 font-title font-bold flex items-center justify-center bg-red-500 border rounded-full">
-            {dayItem.format("D")}
-          </div>
-        ) : (
-          <div className={classDay}>{dayItem.format("D")}</div>
-        )}
-      </div>
+      {isToday ? (
+        <div className="w-7 h-7 font-title font-bold flex items-center justify-center bg-red-500 border rounded-full">
+          {dayItem.format("D")}
+        </div>
+      ) : (
+        <div className={classDay}>{dayItem.format("D")}</div>
+      )}
     </div>
   );
 };
+
+const Event = () => {
+  return (
+    <div>
+      <p>qwertyuio</p>
+    </div>
+  );
+};
+
+// const Day = ({ dayItem, isCurrentDay, numberDay, children }) => {
+//   const isToday = isCurrentDay(dayItem);
+//   const classDay = clsx(
+//     "w-7 h-7 font-title font-bold  flex justify-center items-center",
+//     numberDay === dayItem.month() ? "opacity-100" : "opacity-30",
+//   );
+//   return (
+//     <div className="h-7">
+//       <div className="mx-auto">
+//         {isToday ? (
+//           <div className="w-7 h-7 font-title font-bold flex items-center justify-center bg-red-500 border rounded-full">
+//             {dayItem.format("D")}
+//           </div>
+//         ) : (
+//           <div className={classDay}>{dayItem.format("D")}</div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };

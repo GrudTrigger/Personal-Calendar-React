@@ -1,14 +1,24 @@
 import Header from "../Header/Header";
 import DayOfTheWeek from "../DayOfTheWeek/DayOfTheWeek";
 import DaysOfMonth from "../DaysOfMonth/DaysOfMonth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import moment from "moment";
+
+const url = "http://localhost:5000";
 
 const App = () => {
   moment.updateLocale("en", { week: { dow: 1 } });
-
+  const [events, setEvents] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(moment());
   const startDay = selectedMonth.clone().startOf("month").startOf("week");
+  const startDayQuery = startDay.clone().format("X");
+  const endDayQuery = startDay.clone().add(42, "days").format("X");
+
+  useEffect(() => {
+    fetch(`${url}/events?date_gte=${startDayQuery}&date_lte=${endDayQuery}`)
+      .then((res) => res.json())
+      .then((res) => setEvents(res));
+  }, [selectedMonth]);
 
   const prevHandler = () => {
     setSelectedMonth((prevMonth) => prevMonth.clone().subtract(1, "month"));
@@ -34,7 +44,11 @@ const App = () => {
       </header>
       <main>
         <DayOfTheWeek />
-        <DaysOfMonth startDay={startDay} />
+        <DaysOfMonth
+          startDay={startDay}
+          selectedMonth={selectedMonth}
+          events={events}
+        />
       </main>
     </div>
   );
