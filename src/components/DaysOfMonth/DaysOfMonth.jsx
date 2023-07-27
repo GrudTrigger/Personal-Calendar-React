@@ -16,13 +16,16 @@ const DaysOfMonth = ({ startDay, selectedMonth, events, openFormHandler }) => {
     const today = moment();
     return day.isSame(today, "day");
   };
-
   const numberDay = selectedMonth.month();
-
   return (
     <DaysOfMonthGrid>
       {daysArray.map((dayItem, index) => {
         const isToday = dayItem.isSame(moment(), "day");
+        const eventsForDay = events.filter(
+          (event) =>
+            event.date >= dayItem.format("X") &&
+            event.date <= dayItem.clone().endOf("day").format("X"),
+        );
 
         return (
           <DaysCell
@@ -35,26 +38,12 @@ const DaysOfMonth = ({ startDay, selectedMonth, events, openFormHandler }) => {
               isCurrentDay={isCurrentDay}
               numberDay={numberDay}
               openFormHandler={openFormHandler}
-            ></Day>
-            <ul className="m-0 list-inside p-1">
-              {events
-                .filter(
-                  (event) =>
-                    event.date >= dayItem.format("X") &&
-                    event.date <= dayItem.clone().endOf("day").format("X"),
-                )
-                .map((event, index) => (
-                  <button
-                    key={index}
-                    onClick={() => openFormHandler("Update", event)}
-                    className=" relative -left-1 text-ellipsis overflow-hidden whitespace-nowrap w-28 border-0 text-green-400 cursor-pointer m-0 p-0 text-left"
-                  >
-                    <li key={event.id} className="">
-                      {event.title}
-                    </li>
-                  </button>
-                ))}
-            </ul>
+            />
+            <Events
+              eventsForDay={eventsForDay}
+              openFormHandler={openFormHandler}
+              dayItem={dayItem}
+            />
           </DaysCell>
         );
       })}
@@ -79,21 +68,55 @@ const DaysCell = ({ children, isWeekend }) => {
 const Day = ({ dayItem, isCurrentDay, numberDay, openFormHandler }) => {
   const isToday = isCurrentDay(dayItem);
   const classDay = clsx(
-    "w-7 h-7 font-title font-bold",
+    "w-7 h-7 font-title font-bold cursor-pointer",
     numberDay === dayItem.month() ? "opacity-100" : "opacity-30",
   );
   return (
-    <div
-      onClick={() => openFormHandler("Create")}
-      className="flex justify-end cursor-pointer"
-    >
+    <div className="flex justify-end ">
       {isToday ? (
-        <div className="w-7 h-7 font-title font-bold flex items-center justify-center bg-red-500 border rounded-full">
+        <div
+          onClick={() => openFormHandler("Create", null, dayItem)}
+          className="w-7 h-7 font-title font-bold flex items-center justify-center bg-red-500 border rounded-full cursor-pointer"
+        >
           {dayItem.format("D")}
         </div>
       ) : (
-        <div className={classDay}>{dayItem.format("D")}</div>
+        <div
+          onClick={() => openFormHandler("Create", null, dayItem)}
+          className={classDay}
+        >
+          {dayItem.format("D")}
+        </div>
       )}
     </div>
+  );
+};
+
+const Events = ({ eventsForDay, openFormHandler, dayItem }) => {
+  const showMoreButton = eventsForDay.length > 2;
+  return (
+    <ul className="m-0 list-inside p-1">
+      {eventsForDay
+        .slice(0, showMoreButton ? 2 : eventsForDay.length)
+        .map((event, index) => (
+          <button
+            key={index}
+            onClick={() => openFormHandler("Update", event)}
+            className="relative -left-1 text-ellipsis overflow-hidden whitespace-nowrap w-28 border-0 text-green-400 cursor-pointer m-0 p-0 text-left mb-1"
+          >
+            <li key={event.id} className="bg-sky-700 text-white rounded pl-1">
+              {event.title}
+            </li>
+          </button>
+        ))}
+      {showMoreButton ? (
+        <button
+          key={dayItem.format("X")}
+          className="relative -left-1 text-ellipsis overflow-hidden whitespace-nowrap w-28 border-0 text-green-400 cursor-pointer m-0 p-0 text-left mb-1"
+        >
+          <li className="bg-sky-700 text-white rounded pl-1">Show more...</li>
+        </button>
+      ) : null}
+    </ul>
   );
 };
