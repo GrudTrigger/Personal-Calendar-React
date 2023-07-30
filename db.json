@@ -1,70 +1,22 @@
 {
   "events": [
     {
-      "id": 1,
-      "title": "Go to the bath",
-      "descr": "Go to the bath",
-      "date": 1690146000
-    },
-    {
-      "id": 2,
-      "title": "Go to the GYM",
-      "descr": "Go to the GYM",
-      "date": 1690103266
-    },
-    {
-      "id": 3,
-      "title": "Go to the GYM",
-      "descr": "Go to the GYM",
-      "date": 1684832844
-    },
-    {
-      "title": "Встреча",
-      "descr": "Поехать на встручу",
-      "date": "1690405200",
-      "id": 4
-    },
-    {
       "title": "test",
       "descr": "test",
-      "date": "1690146000",
-      "id": 5
+      "date": "1690578000",
+      "id": 1
     },
     {
-      "title": "11",
-      "descr": "11",
-      "date": "1690146000",
-      "id": 6
+      "title": "work",
+      "descr": "work",
+      "date": "1690578000",
+      "id": 2
     },
     {
-      "title": "qqq",
-      "descr": "qqq",
-      "date": "1690405200",
-      "id": 7
-    },
-    {
-      "title": "asdasd",
-      "descr": "dasd",
-      "date": "1690405200",
-      "id": 8
-    },
-    {
-      "title": "qwe",
-      "descr": "qwe",
-      "date": "1689800400",
-      "id": 9
-    },
-    {
-      "title": "asd",
-      "descr": "asd",
-      "date": "1689800400",
-      "id": 10
-    },
-    {
-      "title": "zxc",
-      "descr": "zxc",
-      "date": "1689800400",
-      "id": 11
+      "title": "00",
+      "descr": "00",
+      "date": "1690578000",
+      "id": 3
     }
   ]
 }

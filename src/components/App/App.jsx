@@ -4,12 +4,19 @@ import DaysOfMonth from "../DaysOfMonth/DaysOfMonth";
 import FormEvent from "../FormEvent/FormEvent";
 import { useEffect, useState } from "react";
 import moment from "moment";
+import DayShowComponent from "../DayShowComponent/DayShowComponent";
 
 const url = "http://localhost:5000";
+// const defaultEvent = {
+//   title: "",
+//   descr: "",
+//   date: Number(moment().format("X")),
+// };
+
 const defaultEvent = {
   title: "",
   descr: "",
-  date: Number(moment().format("X")),
+  date: moment().format("X"),
 };
 const App = () => {
   moment.updateLocale("en", { week: { dow: 1 } });
@@ -18,6 +25,7 @@ const App = () => {
   const [event, setEvent] = useState(null);
   const [method, setMethod] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [displayMode, setDisplayMode] = useState("month");
   const startDay = selectedMonth.clone().startOf("month").startOf("week");
   const startDayQuery = startDay.clone().format("X");
   const endDayQuery = startDay.clone().add(42, "days").format("X");
@@ -29,7 +37,7 @@ const App = () => {
   }, [selectedMonth]);
 
   const prevHandler = () => {
-    setSelectedMonth((prevMonth) => prevMonth.clone().subtract(1, "month"));
+    setSelectedMonth((prevMonth) => prevMonth.clone().subtract(1, displayMode));
   };
 
   const todayHandler = () => {
@@ -37,7 +45,7 @@ const App = () => {
   };
 
   const nextHandler = () => {
-    setSelectedMonth((prevMonth) => prevMonth.clone().add(1, "month"));
+    setSelectedMonth((prevMonth) => prevMonth.clone().add(1, displayMode));
   };
 
   const openFormHandler = (methodName, eventForUpdate, dayItem) => {
@@ -117,16 +125,31 @@ const App = () => {
             todayHandler={todayHandler}
             nextHandler={nextHandler}
             today={selectedMonth}
+            setDisplayMode={setDisplayMode}
+            displayMode={displayMode}
           />
         </header>
         <main>
-          <DayOfTheWeek />
-          <DaysOfMonth
-            startDay={startDay}
-            selectedMonth={selectedMonth}
-            events={events}
-            openFormHandler={openFormHandler}
-          />
+          {displayMode === "month" ? (
+            <>
+              <DayOfTheWeek />
+              <DaysOfMonth
+                startDay={startDay}
+                selectedMonth={selectedMonth}
+                events={events}
+                openFormHandler={openFormHandler}
+              />
+            </>
+          ) : null}
+
+          {displayMode === "day" ? (
+            <DayShowComponent
+              events={events}
+              today={selectedMonth}
+              event={event}
+              setEvent={setEvent}
+            />
+          ) : null}
         </main>
       </div>
     </div>
