@@ -9,7 +9,7 @@ const Header = ({
   return (
     <>
       <div className=" w-[1000px] h-16 flex justify-between items-center pt-3 mx-auto my-auto">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 w-80">
           {displayMode === "day" ? (
             <div className="font-title font-bold text-gray-500 text-4xl leading-tight">
               {today.format("DD")}
@@ -25,16 +25,32 @@ const Header = ({
         </div>
         <div className="flex justify-center">
           <button
-            className="w-14 h-8 bg-gray-200 border border-gray-300 rounded-lg flex items-center justify-center"
+            className={`w-14 h-8 ${
+              displayMode === "month" ? "bg-blue-500" : "bg-gray-200"
+            } border border-gray-300 rounded-lg flex items-center justify-center `}
             onClick={() => setDisplayMode("month")}
           >
-            <span className="text-gray-600">Month</span>
+            <span
+              className={`${
+                displayMode === "month" ? "text-white" : "text-gray-600"
+              }`}
+            >
+              Month
+            </span>
           </button>
           <button
-            className="w-14 h-8 bg-gray-200 border border-gray-300 rounded-lg flex items-center justify-center"
+            className={`w-14 h-8 ${
+              displayMode === "day" ? "bg-blue-500" : "bg-gray-200"
+            } border border-gray-300 rounded-lg flex items-center justify-center`}
             onClick={() => setDisplayMode("day")}
           >
-            <span className="text-gray-600">Day</span>
+            <span
+              className={`${
+                displayMode === "day" ? "text-white" : "text-gray-600"
+              }`}
+            >
+              Day
+            </span>
           </button>
         </div>
 
