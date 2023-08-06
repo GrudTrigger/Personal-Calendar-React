@@ -6,9 +6,7 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import DayShowComponent from "../DayShowComponent/DayShowComponent";
 
-const url = process.env.API_URL
-  ? process.env.API_URL
-  : "http://localhost:8000/";
+const url = "https://tasty-cookie-pocket.glitch.me/";
 const defaultEvent = {
   title: "",
   descr: "",
