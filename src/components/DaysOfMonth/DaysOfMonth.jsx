@@ -1,7 +1,13 @@
 import clsx from "clsx";
 import moment from "moment";
 
-const DaysOfMonth = ({ startDay, selectedMonth, events, openFormHandler }) => {
+const DaysOfMonth = ({
+  startDay,
+  selectedMonth,
+  events,
+  openModalFormHandler,
+  setDisplayMode,
+}) => {
   const totalDay = 42;
   const day = startDay.clone().subtract(1, "day");
   const daysArray = [...Array(totalDay)].map((_, index) =>
@@ -37,12 +43,13 @@ const DaysOfMonth = ({ startDay, selectedMonth, events, openFormHandler }) => {
               dayItem={dayItem}
               isCurrentDay={isCurrentDay}
               numberDay={numberDay}
-              openFormHandler={openFormHandler}
+              openModalFormHandler={openModalFormHandler}
             />
             <Events
               eventsForDay={eventsForDay}
-              openFormHandler={openFormHandler}
+              openModalFormHandler={openModalFormHandler}
               dayItem={dayItem}
+              setDisplayMode={setDisplayMode}
             />
           </DaysCell>
         );
@@ -65,7 +72,7 @@ const DaysCell = ({ children, isWeekend }) => {
   return <div className={classCell}>{children}</div>;
 };
 
-const Day = ({ dayItem, isCurrentDay, numberDay, openFormHandler }) => {
+const Day = ({ dayItem, isCurrentDay, numberDay, openModalFormHandler }) => {
   const isToday = isCurrentDay(dayItem);
   const classDay = clsx(
     "w-7 h-7 font-title font-bold cursor-pointer",
@@ -75,14 +82,14 @@ const Day = ({ dayItem, isCurrentDay, numberDay, openFormHandler }) => {
     <div className="flex justify-end ">
       {isToday ? (
         <div
-          onClick={() => openFormHandler("Create", null, dayItem)}
+          onClick={() => openModalFormHandler("Create", null, dayItem)}
           className="w-7 h-7 font-title font-bold flex items-center justify-center bg-red-500 border rounded-full cursor-pointer"
         >
           {dayItem.format("D")}
         </div>
       ) : (
         <div
-          onClick={() => openFormHandler("Create", null, dayItem)}
+          onClick={() => openModalFormHandler("Create", null, dayItem)}
           className={classDay}
         >
           {dayItem.format("D")}
@@ -92,7 +99,12 @@ const Day = ({ dayItem, isCurrentDay, numberDay, openFormHandler }) => {
   );
 };
 
-const Events = ({ eventsForDay, openFormHandler, dayItem }) => {
+const Events = ({
+  eventsForDay,
+  openModalFormHandler,
+  dayItem,
+  setDisplayMode,
+}) => {
   const showMoreButton = eventsForDay.length > 2;
   return (
     <ul className="m-0 list-inside p-1">
@@ -101,7 +113,7 @@ const Events = ({ eventsForDay, openFormHandler, dayItem }) => {
         .map((event, index) => (
           <button
             key={index}
-            onClick={() => openFormHandler("Update", event)}
+            onClick={() => openModalFormHandler("Update", event)}
             className="relative -left-1 text-ellipsis overflow-hidden whitespace-nowrap w-28 border-0 text-green-400 cursor-pointer m-0 p-0 text-left mb-1"
           >
             <li key={event.id} className="bg-sky-700 text-white rounded pl-1">
@@ -111,6 +123,7 @@ const Events = ({ eventsForDay, openFormHandler, dayItem }) => {
         ))}
       {showMoreButton ? (
         <button
+          onClick={() => setDisplayMode("day")}
           key={dayItem.format("X")}
           className="relative -left-1 text-ellipsis overflow-hidden whitespace-nowrap w-28 border-0 text-green-400 cursor-pointer m-0 p-0 text-left mb-1"
         >

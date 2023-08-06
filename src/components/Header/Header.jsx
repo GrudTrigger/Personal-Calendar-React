@@ -8,7 +8,7 @@ const Header = ({
 }) => {
   return (
     <>
-      <div className="flex justify-between items-center pt-3">
+      <div className=" w-[1000px] h-16 flex justify-between items-center pt-3 mx-auto my-auto">
         <div className="flex items-center gap-6">
           {displayMode === "day" ? (
             <div className="font-title font-bold text-gray-500 text-4xl leading-tight">
@@ -23,12 +23,21 @@ const Header = ({
             {today.format("MMMM")}
           </div>
         </div>
-
-        <div className="flex items-center">
-          <h1 className="font-text text-black text-4xl font-normal mr-8">
-            Personal Calendar
-          </h1>
+        <div className="flex justify-center">
+          <button
+            className="w-14 h-8 bg-gray-200 border border-gray-300 rounded-lg flex items-center justify-center"
+            onClick={() => setDisplayMode("month")}
+          >
+            <span className="text-gray-600">Month</span>
+          </button>
+          <button
+            className="w-14 h-8 bg-gray-200 border border-gray-300 rounded-lg flex items-center justify-center"
+            onClick={() => setDisplayMode("day")}
+          >
+            <span className="text-gray-600">Day</span>
+          </button>
         </div>
+
         <div className="w-28 flex justify-between items-center">
           <button
             className="w-5 h-5 bg-gray-200 border border-gray-300 rounded-full flex items-center justify-center pb-0.5"
@@ -49,22 +58,6 @@ const Header = ({
             <span className="text-gray-600">&gt;</span>
           </button>
         </div>
-      </div>
-      <div className=" w-80 mx-auto my-0 flex justify-center">
-        <button
-          className="w-14 h-8 bg-gray-200 border border-gray-300 rounded-lg flex items-center justify-center"
-          onClick={() => setDisplayMode("month")}
-          // unPressed={displayMode === "month"}
-        >
-          <span className="text-gray-600">Month</span>
-        </button>
-        <button
-          className="w-14 h-8 bg-gray-200 border border-gray-300 rounded-lg flex items-center justify-center"
-          onClick={() => setDisplayMode("day")}
-          // unPressed={displayMode === "day"}
-        >
-          <span className="text-gray-600">Day</span>
-        </button>
       </div>
     </>
   );

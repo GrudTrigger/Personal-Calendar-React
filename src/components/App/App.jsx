@@ -6,13 +6,9 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import DayShowComponent from "../DayShowComponent/DayShowComponent";
 
-const url = "http://localhost:5000";
-// const defaultEvent = {
-//   title: "",
-//   descr: "",
-//   date: Number(moment().format("X")),
-// };
-
+const url = process.env.API_URL
+  ? process.env.API_URL
+  : "http://localhost:8000/";
 const defaultEvent = {
   title: "",
   descr: "",
@@ -31,7 +27,7 @@ const App = () => {
   const endDayQuery = startDay.clone().add(42, "days").format("X");
 
   useEffect(() => {
-    fetch(`${url}/events?date_gte=${startDayQuery}&date_lte=${endDayQuery}`)
+    fetch(`${url}events?date_gte=${startDayQuery}&date_lte=${endDayQuery}`)
       .then((res) => res.json())
       .then((res) => setEvents(res));
   }, [selectedMonth]);
@@ -49,11 +45,15 @@ const App = () => {
   };
 
   const openFormHandler = (methodName, eventForUpdate, dayItem) => {
-    console.log("click", methodName);
-    setIsOpenModal(true);
     setEvent(eventForUpdate || { ...defaultEvent, date: dayItem.format("X") });
     setMethod(methodName);
   };
+
+  const openModalFormHandler = (methodName, eventForUpdate, dayItem) => {
+    setIsOpenModal(true);
+    openFormHandler(methodName, eventForUpdate, dayItem);
+  };
+
   const cancelButtonHandler = () => {
     setIsOpenModal(false);
     setEvent(null);
@@ -68,7 +68,7 @@ const App = () => {
 
   const eventFetchHandler = () => {
     const fetchUrl =
-      method === "Update" ? `${url}/events/${event.id}` : `${url}/events`;
+      method === "Update" ? `${url}events/${event.id}` : `${url}events`;
     const httpMethod = method === "Update" ? "PATCH" : "POST";
 
     fetch(fetchUrl, {
@@ -92,7 +92,7 @@ const App = () => {
   };
 
   const eventDelete = (id) => {
-    const deleteUrl = `${url}/events/${id}`;
+    const deleteUrl = `${url}events/${id}`;
 
     fetch(deleteUrl, {
       method: "DELETE",
@@ -137,7 +137,8 @@ const App = () => {
                 startDay={startDay}
                 selectedMonth={selectedMonth}
                 events={events}
-                openFormHandler={openFormHandler}
+                openModalFormHandler={openModalFormHandler}
+                setDisplayMode={setDisplayMode}
               />
             </>
           ) : null}
@@ -147,7 +148,12 @@ const App = () => {
               events={events}
               today={selectedMonth}
               event={event}
-              setEvent={setEvent}
+              cancelButtonHandler={cancelButtonHandler}
+              changeEventHandler={changeEventHandler}
+              eventFetchHandler={eventFetchHandler}
+              method={method}
+              eventDelete={eventDelete}
+              openFormHandler={openFormHandler}
             />
           ) : null}
         </main>
