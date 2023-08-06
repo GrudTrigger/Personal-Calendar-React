@@ -32,15 +32,21 @@ git clone https://github.com/ваш-логин/calendar-react.git
 
 2. Перейдите в папку проекта:
 
+```sh
 cd calendar-react
+```
 
 3. Установите зависимости:
 
+```sh
 npm install
+```
 
 4. Запустите приложение:
 
+```sh
 npm start
+```
 
 Приложение будет доступно по адресу http://localhost:3000.
 
