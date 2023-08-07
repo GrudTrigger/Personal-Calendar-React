@@ -1,3 +1,6 @@
+import moment from "moment";
+import { useState } from "react";
+
 const FormEvent = ({
   cancelButtonHandler,
   changeEventHandler,
@@ -6,6 +9,12 @@ const FormEvent = ({
   method,
   eventDelete,
 }) => {
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const setTimeForEvent = (i) => {
+    setShowTimePicker(false);
+    const time = moment.unix(+event.date).hour(i).minute(0).format("X");
+    changeEventHandler(time, "date");
+  };
   return (
     <div
       onClick={cancelButtonHandler}
@@ -24,6 +33,33 @@ const FormEvent = ({
           className="w-full px-3 py-2 text-sm border-b border-gray-300 focus:border-black focus:outline-none"
           placeholder="Title"
         />
+        <div className=" px-3 py-2 border-b flex">
+          <button>{moment.unix(event.date).format("dddd, D MMMM")}</button>
+
+          <button
+            className="ml-2"
+            onClick={() => setShowTimePicker((prevState) => !prevState)}
+          >
+            {moment.unix(event.date).format("HH:mm")}
+          </button>
+
+          {showTimePicker ? (
+            <div className=" relative">
+              <ul className="m-0 p-0 h-16 overflow-scroll absolute bg-black text-white -right- top-5 rounded-md shadow-md">
+                {[...new Array(24)].map((_, i) => (
+                  <li key={i}>
+                    <button
+                      onClick={() => setTimeForEvent(i)}
+                      className="block px-3 py-2 text-left w-full hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
+                    >
+                      {`${i}`.padStart(2, "0")}:00
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </div>
         <input
           onChange={(e) => {
             changeEventHandler(e.target.value, "descr");

@@ -29,31 +29,19 @@ const DayShowComponent = ({
     return temp;
   });
 
-  console.log(cells);
   return (
     <div className="flex justify-between pt-4">
-      {/* <ul className=" w-7/12">
-        {eventsForDay.map((eventEl) => (
-          <li
-            onClick={() => openFormHandler("Update", eventEl)}
-            key={eventEl.id}
-            className="bg-sky-700 text-white rounded mt-1 cursor-pointer"
-          >
-            {eventEl.title}
-          </li>
-        ))}
-      </ul> */}
       <div className=" w-[665px] h-full flex flex-col pl-1 pr-1">
         {cells.map((eventsList, i) => (
           <div key={i} className=" flex-grow relative border-t ml-8">
             <div className=" absolute -left-7 -top-[10px] text-xs">
               {i ? <>{`${i}`.padStart(2, "0")}:00</> : null}
             </div>
-            <div className=" h-8 min-h-full">
+            <div className=" h-8 min-h-full pt-1">
               {eventsList.map((event, index) => {
                 return (
                   <span
-                    className="ml-1 pl-1 pr-1 bg-sky-700 text-white rounded cursor-pointer"
+                    className="ml-2 px-1 bg-sky-700 text-white rounded cursor-pointer"
                     onClick={() => openFormHandler("Update", event)}
                     key={index}
                   >
