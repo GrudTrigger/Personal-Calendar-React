@@ -10,6 +10,7 @@ const url = "https://tasty-cookie-pocket.glitch.me/";
 const defaultEvent = {
   title: "",
   descr: "",
+  duration: 1,
   date: moment().format("X"),
 };
 const App = () => {

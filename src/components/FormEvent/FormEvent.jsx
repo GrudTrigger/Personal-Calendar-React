@@ -10,11 +10,19 @@ const FormEvent = ({
   eventDelete,
 }) => {
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [showDurationPicker, setShowDurationPicker] = useState(false);
   const setTimeForEvent = (i) => {
     setShowTimePicker(false);
     const time = moment.unix(+event.date).hour(i).minute(0).format("X");
     changeEventHandler(time, "date");
   };
+  const setDurationForEvent = (i) => {
+    // const a = moment.unix(+event.date).hour();
+    // console.log("duration", i);
+    setShowDurationPicker(false);
+    changeEventHandler(i, "duration");
+  };
+  //https://timeconverter.online/1697846400
   return (
     <div
       onClick={cancelButtonHandler}
@@ -40,7 +48,7 @@ const FormEvent = ({
             className="ml-2"
             onClick={() => setShowTimePicker((prevState) => !prevState)}
           >
-            {moment.unix(event.date).format("HH:mm")}
+            {moment.unix(+event.date).format("HH:mm")}
           </button>
 
           {showTimePicker ? (
@@ -60,6 +68,33 @@ const FormEvent = ({
             </div>
           ) : null}
         </div>
+
+        <div className=" px-3 py-2 border-b flex">
+          <button
+            className="ml-2"
+            onClick={() => setShowDurationPicker((prevState) => !prevState)}
+          >
+            {`${event.duration}`.padStart(2, "0")}:00
+          </button>
+
+          {showDurationPicker ? (
+            <div className=" relative">
+              <ul className="m-0 p-0 h-16 overflow-scroll absolute bg-black text-white -right- top-5 rounded-md shadow-md">
+                {[...new Array(24)].map((_, i) => (
+                  <li key={i}>
+                    <button
+                      onClick={() => setDurationForEvent(i + 1)}
+                      className="block px-3 py-2 text-left w-full hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
+                    >
+                      {`${i + 1}`.padStart(2, "0")}:00
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </div>
+
         <input
           onChange={(e) => {
             changeEventHandler(e.target.value, "descr");
